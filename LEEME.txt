@@ -1,0 +1,5 @@
+Saludos, 
+
+En el pdf "BDDII Proyecto Final" esta toda la documentacion menos los creates y inserts de los ambientes
+operacionales y dimensionales. Lo otro esta repartido en las carpetas, lo cual se detalla en el pdf.
+

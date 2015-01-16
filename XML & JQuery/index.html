@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Programming Languages</title>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js"></script>
+<div id='here'></div>
+
+
+<script>
+var _xml;
+var text = document.getElementById('here');
+
+$(document).ready(function () {
+    $.ajax({
+        type: "GET",
+        url: "MLB.xml",
+        dataType: "xml",
+        success: xmlParser
+    });
+});
+
+function xmlParser(xml) {
+    _xml = xml;
+    _id = 0;
+    _html = '';
+
+    QueryPlayers();
+}
+
+function QueryPlayers(){ 
+
+    var position;
+    var jersey;
+    var first_name;
+    var preferred_first_name;
+    var last_name;
+    var bat_hand;
+    var throw_hand;
+    var weight;
+    var height;
+    var birthdate;
+    var birthcountry;
+    var highSchool;
+    var college;
+    var pro_debut;
+    var team;
+
+    $(_xml).find("team").each( function() {
+
+      team = $(this).attr('abbr')
+
+      $(this).find("profile").each( function() {
+          jersey = $(this).attr('jersey');
+          position = $(this).attr('position');
+          first_name = $(this).find('first').text();
+          preferred_first_name = $(this).find('preferred_first').text();
+          last_name = $(this).find('last').text();
+          bat_hand = $(this).find('bat_hand').text();
+          throw_hand = $(this).find('throw_hand').text();
+          weight = $(this).find('weight').text();
+          height = $(this).find('height').text();
+          birthdate = $(this).find('birthdate').text();
+          birthcountry = $(this).find('birthcountry').text();
+          highSchool = $(this).find('highschool').text()  || 'Unknown';
+          college = $(this).find('college').text() || 'Unknown';
+          pro_debut = $(this).find('pro_debut').text() || "2010-01-01";
+
+          _html += ('insert into JUGADORES values(' +
+                    _id++ +','+
+                    "'" + first_name + "'," +
+                    "'" + preferred_first_name + "'," +
+                    "'" + last_name.replace(/\'/g, "''") + "'," +
+                    "'" + jersey + "'," +
+                    "'" + position + "'," +
+                    "'" + bat_hand + "'," +
+                    "'" + throw_hand + "'," +
+                    "" + height.substring(0,1) + '.' + height.substring(1,3) + "," +   
+                    "" + weight + "," +
+                    "'" + birthdate + "'," +
+                    "'" + birthcountry + "'," +
+                    "'" + highSchool.replace(/\'/g, "''") + "'," +
+                    "'" + college.replace(/\'/g, "''") + "'," +
+                    "'" + pro_debut + "'," +
+                    "'" + team + "'); <br>");
+      }); 
+    });      
+  
+    text.innerHTML = _html;
+}
+
+</script>
+</head>
+</html>
